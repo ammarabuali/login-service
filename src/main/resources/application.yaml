@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: LoginApi
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/Auth
+
+jwt:
+  secret: dtpOQm7XB+SKlYh0/RmMYjWoqV5Rh9m31HNjAeZWhxLqIcGLKxF5BbCFZcakcXfft/xAKAEoqnRop4rTMcCVXA==
+  expiration: 86400000
