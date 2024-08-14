@@ -2,6 +2,7 @@ package org.example.loginapi.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.loginapi.entity.UserCredentials;
+import org.example.loginapi.entity.response.AuthResponse;
 import org.example.loginapi.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserCredentials userCredentials) {
-        String token = authService.authenticateUser(userCredentials);
-        if (token != null) {
-            return ResponseEntity.ok(token);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthenticated");
+    public ResponseEntity<AuthResponse> login(@RequestBody UserCredentials userCredentials) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.authenticateUser(userCredentials));
     }
 }

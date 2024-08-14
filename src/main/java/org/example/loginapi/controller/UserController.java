@@ -1,7 +1,12 @@
 package org.example.loginapi.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.loginapi.entity.UserEntity;
+import org.example.loginapi.entity.dto.UserDto;
+import org.example.loginapi.entity.request.DeleteUserRequest;
+import org.example.loginapi.entity.request.FindUserRequest;
+import org.example.loginapi.entity.response.DeleteResponse;
 import org.example.loginapi.exception.UserAlreadyExistsException;
 import org.example.loginapi.exception.UserServiceException;
 import org.example.loginapi.service.UserService;
@@ -19,40 +24,32 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
-    public List<UserEntity> getAllUsers() {
-        return userService.findAll();
+    @GetMapping("/find/all")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
 
-    @GetMapping("/user")
-    public UserEntity getUserByUsername(@RequestParam String username) {
-        return userService.findByUsername(username);
-    }
-
-
-    @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody UserEntity user) {
-        try {
-            UserEntity createdUser = userService.createUser(user);
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-        } catch (UserAlreadyExistsException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new UserServiceException("An unexpected error occurred while creating user: " + ex.getMessage());
-        }
+    @GetMapping("/find")
+    public ResponseEntity<UserDto> getUserByUsername(@RequestBody FindUserRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findByUsername(request.getUsername()));
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable String id) {
-        try {
-            userService.deleteById(id);
-            return new ResponseEntity<>("User with ID " + id + " deleted successfully.", HttpStatus.NO_CONTENT);
-        } catch (UsernameNotFoundException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new UserServiceException("An unexpected error occurred while deleting user with ID " + id);
-        }
+    @PostMapping("/create")
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserEntity user) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
+    }
+
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<DeleteResponse> deleteUser(@RequestBody DeleteUserRequest request) {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.deleteById(request.getId()));
+    }
+
+    @DeleteMapping("/delete/all")
+    public ResponseEntity<DeleteResponse> deleteAllUsers() {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deleteAll());
+
     }
 
 }

@@ -8,3 +8,7 @@ spring:
 jwt:
   secret: dtpOQm7XB+SKlYh0/RmMYjWoqV5Rh9m31HNjAeZWhxLqIcGLKxF5BbCFZcakcXfft/xAKAEoqnRop4rTMcCVXA==
   expiration: 86400000
+
+server:
+  servlet:
+    context-path: /authentication/v1

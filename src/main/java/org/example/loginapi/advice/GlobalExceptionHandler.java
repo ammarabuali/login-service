@@ -1,4 +1,4 @@
-package org.example.loginapi.controller;
+package org.example.loginapi.advice;
 
 import org.example.loginapi.exception.InvalidPasswordException;
 import org.example.loginapi.exception.UserServiceException;
