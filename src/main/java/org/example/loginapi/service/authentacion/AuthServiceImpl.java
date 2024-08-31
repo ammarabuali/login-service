@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse authenticateUser(UserCredentials userCredentials) {
         try {
-            UserEntity user = usersRepo.findByUsername(userCredentials.getUsername())
+            UserEntity user = usersRepo.findByUsername(userCredentials.getUsername().toLowerCase())
                     .orElseThrow();
             if (!passwordEncoder.matches(userCredentials.getPassword(), user.getPassword())) {
                 throw new InvalidPasswordException();
