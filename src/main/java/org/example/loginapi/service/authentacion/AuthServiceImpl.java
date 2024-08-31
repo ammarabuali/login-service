@@ -1,17 +1,25 @@
-package org.example.loginapi.service;
+package org.example.loginapi.service.authentacion;
 
 import lombok.RequiredArgsConstructor;
-import org.example.loginapi.entity.UserCredentials;
-import org.example.loginapi.entity.UserEntity;
-import org.example.loginapi.entity.response.AuthResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.example.loginapi.model.request.UserCredentials;
+import org.example.loginapi.model.entity.UserEntity;
+import org.example.loginapi.model.response.AuthResponse;
 import org.example.loginapi.exception.InvalidPasswordException;
 import org.example.loginapi.exception.TokenGenerationException;
 import org.example.loginapi.repo.UserRepo;
+import org.example.loginapi.service.jwt.JwtService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepo usersRepo;
@@ -26,7 +34,13 @@ public class AuthServiceImpl implements AuthService {
             if (!passwordEncoder.matches(userCredentials.getPassword(), user.getPassword())) {
                 throw new InvalidPasswordException();
             }
-            return AuthResponse.builder().token(jwtService.generateToken(userCredentials.getUsername())).build();
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("role", user.getRole());
+            claims.put("permissions", user.getPermissions());
+            return AuthResponse.builder().token(jwtService.generateToken(userCredentials.getUsername(), claims)).build();
+        } catch (NoSuchElementException e) {
+            log.error("No such user exists with username {}", userCredentials.getUsername());
+            throw new UsernameNotFoundException("No such user exists with username " + userCredentials.getUsername());
         } catch (InvalidPasswordException e) {
             throw new InvalidPasswordException("Wrong Credentials!, \nusername or password is incorrect " + e.getMessage());
         } catch (Exception e) {
@@ -35,3 +49,4 @@ public class AuthServiceImpl implements AuthService {
     }
 
 }
+

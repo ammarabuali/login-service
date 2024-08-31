@@ -1,20 +1,14 @@
 package org.example.loginapi.repo;
 
 
-import org.example.loginapi.entity.UserEntity;
+import org.example.loginapi.model.entity.UserEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
 
 public interface UserRepo extends MongoRepository<UserEntity, String> {
-
     Optional<UserEntity> findByUsername(String username);
-
-    Optional<UserEntity> findByEmail(String email);
-
-    Optional<UserEntity> findByPhoneNumber(String phoneNumber);
-
 }
 
 

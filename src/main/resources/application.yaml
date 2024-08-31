@@ -3,7 +3,7 @@ spring:
     name: LoginApi
   data:
     mongodb:
-      uri: mongodb://localhost:27017/Auth
+      uri: mongodb://localhost:27017/User
 
 jwt:
   secret: dtpOQm7XB+SKlYh0/RmMYjWoqV5Rh9m31HNjAeZWhxLqIcGLKxF5BbCFZcakcXfft/xAKAEoqnRop4rTMcCVXA==
@@ -12,3 +12,4 @@ jwt:
 server:
   servlet:
     context-path: /authentication/v1
+  port: 8070

@@ -9,9 +9,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableMongoRepositories(basePackages = "org.example.loginapi.repo")
 @EnableFeignClients
-public class Application {
+public class Main {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(Main.class, args);
     }
 
 }

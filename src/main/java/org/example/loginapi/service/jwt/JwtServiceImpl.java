@@ -1,4 +1,4 @@
-package org.example.loginapi.service;
+package org.example.loginapi.service.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -33,17 +34,20 @@ public class JwtServiceImpl implements JwtService {
 
 
     @Override
-    public String generateToken(String username) {
+    public String generateToken(String email, Map<String, Object> additionalClaims) {
         try {
+            // Build the JWT with additional claims
             return Jwts.builder()
-                    .setSubject(username)
+                    .setSubject(email)
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                    .addClaims(additionalClaims)
                     .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                     .compact();
         } catch (Exception e) {
             throw new TokenGenerationException("Could not generate JWT token");
         }
     }
+
 
 }
